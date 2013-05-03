@@ -1,0 +1,50 @@
+//outside the loop
+ TableLayout tbl1 = (TableLayout) findViewById(R.id.tbl1);
+
+ //inside the loop
+  TableRow tr = new TableRow(this);
+                  
+                  LinearLayout Cell1 = new LinearLayout(this);
+                  Cell1.addView(lbl);
+                  Cell1.addView(lbl2);  
+                
+                  //adding the cell to the row.
+                  tr.addView(Cell1);
+                  
+                  TableRow tr2 = new TableRow(this);
+                  LinearLayout Cell2 = new LinearLayout(this);
+                  Cell2.addView(lbl3, new LinearLayout.LayoutParams
+                (450, LayoutParams.WRAP_CONTENT));
+                  tr2.addView(Cell2);
+                 
+                  TableRow tr3 = new TableRow(this);
+                  LinearLayout Cell3 = new LinearLayout(this);
+                  
+                  View hr = new View(this);
+                  //hr.setBackgroundColor(Color.WHITE);
+                  hr.setMinimumHeight(9);
+                  
+                  Cell3.addView(hr); //adding spacer only
+                  tr3.addView(Cell3);
+//outside the loop
+//adding the row to the table.
+                  tbl1.addView(tr); //adding job title row
+                  tbl1.addView(tr2); // job desc text
+                  tbl1.addView(tr3); // spacer row
+//registering click for the row.
+                  
+                  tr.setClickable(true);
+                  tr.setId(Integer.parseInt(obj.getProperty("JobID").toString()));
+                  
+                     // Register handler for UI elements
+                  tr.setOnClickListener(new View.OnClickListener() {
+                      public void onClick(View v) {
+                      
+                          int rowid;
+                          rowid = v.getId();
+                          String args = Integer.toString(rowid);
+                        
+                        //function to be called when the row is clicked.  
+                          GetRowID(args);
+                      }
+                  });
