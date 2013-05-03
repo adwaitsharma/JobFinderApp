@@ -12,9 +12,9 @@ The results will be displayed in the tabular way and in Google maps.
 
 
 Note: 
-In order to access the GPS, you will have to add the permission in the AndroidManifest.xml file
+In order to access the GPS, you will have to add the permission 
 android.permission.ACCESS_FINE_LOCATION
 
-In order to be able to communicate with the web service
+In order to be able to communicate with the web service add the permission
 android.permission.INTERNET
 
