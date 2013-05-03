@@ -1,0 +1,50 @@
+[WebMethod]
+    public job[] JobSearch(string keyword, string miles, string latitude, string longitude)
+    {
+        List<job> retVal = new List<job>();
+        SqlConnection conn = new SqlConnection
+        (ConfigurationManager.ConnectionStrings["test_db"].ConnectionString);
+
+        try
+        {
+            int miles_int = Convert.ToInt32(miles);
+            if (miles_int == 0)
+            {
+                latitude = "0";
+                longitude = "0";
+
+            }
+            string sql = "select *,dbo.CoordinateDistanceMiles
+        (" + latitude + "," + longitude + ",latitude,longitude)  
+        'DistanceMiles' from jobs where ";
+            if (miles_int > 0)
+                sql +=" dbo.CoordinateDistanceMiles(" + latitude + "," + 
+        longitude + ",latitude,longitude) <" + miles+ " and ";        
+
+            sql +=" (jobtitle like '%" + keyword  +  "%' or jobdesc like '%" + 
+        keyword  + "%')   order by jobpostdate desc ";    
+
+            SqlCommand cmd = new SqlCommand(sql, conn);
+            conn.Open();
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dr.Read())
+            {
+                job jb = new job(Convert.ToInt32(dr["jobid"]), dr["jobtitle"].ToString(), 
+        Convert.ToString(dr["jobdesc"]), Convert.ToDateTime(dr["jobpostdate"]), 
+        Convert.ToString(dr["city"]), Convert.ToString(dr["country"]), 
+        ((double)(dr["DistanceMiles"])), ((double)(dr["latitude"])), 
+        ((double)(dr["longitude"])));
+                retVal.Add(jb);          
+            }
+        }
+
+        finally
+        {
+            conn.Close();
+            conn.Dispose();
+        }
+
+        return retVal.ToArray(); 
+    }
+
