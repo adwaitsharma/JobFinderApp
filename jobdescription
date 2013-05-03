@@ -1,0 +1,94 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+/// <summary>
+/// Summary description for job
+/// </summary>
+public class job
+{
+    private int _JobID = 0;
+    private string _JobTitle = null;
+    private string _JobDesc = null;
+    private DateTime _JobPostDate = new DateTime();
+
+    private string _country = null;
+    private string _city = null;
+
+    private double _Latitude = 0;
+    private double _Longitude = 0;
+    private string _distancemiles = "0";
+
+    public int JobID
+    {
+        set { _JobID = value; }
+        get { return _JobID; }
+    }
+
+    public string JobTitle
+    {
+        set { _JobTitle = value; }
+        get { return _JobTitle; }
+    }
+
+    public string JobDesc
+    {
+        set { _JobDesc = value; }
+        get { return _JobDesc; }
+    }
+
+    public DateTime JobPostDate
+    {
+        set { _JobPostDate = value; }
+        get { return _JobPostDate; }
+    }
+
+    public string Country
+    {
+        set { _country = value; }
+        get { return _country; }
+    }
+
+    public string City
+    {
+        set { _city = value; }
+        get { return _city; }
+    }
+
+    public double Latitude
+    {
+        set { _Latitude = value; }
+        get { return _Latitude; }
+    }
+
+    public double Longitude
+    {
+        set { _Longitude = value; }
+        get { return _Longitude; }
+    }
+
+    public string DistanceMiles
+    {
+        set { _distancemiles = value; }
+        get { return _distancemiles; }
+    }
+
+    public job(){}
+
+    public job(int jobid, string jobtitle, string jobdesc, 
+    DateTime jobpostdate, string cit, string cnt, double miles, 
+    double lat, double longt)
+    {
+        _JobID = jobid;
+        _JobTitle = jobtitle;
+        _JobDesc = jobdesc;
+        _JobPostDate = jobpostdate;
+        _distancemiles = miles.ToString("0.00");
+        _Latitude = lat;
+        _Longitude = longt;
+        _city = cit;
+        _country = cnt;        
+    }
+}
+
