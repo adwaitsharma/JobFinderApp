@@ -1,0 +1,49 @@
+Create FUNCTION [dbo].[CoordinateDistanceMiles]
+(
+    @Latitude1 float,
+    @Longitude1 float,
+    @Latitude2 float,
+    @Longitude2 float
+)
+
+RETURNS float 
+AS  
+BEGIN 
+    declare @retVal float;
+    
+    if (@Latitude1=0 and @Longitude1=0)
+        set @retVal =0
+    else
+
+    begin
+    
+    -- CONSTANTS
+    DECLARE @EarthRadiusInMiles float;
+    DECLARE @PI  float;
+
+    SET @EarthRadiusInMiles = 3963.1
+    SET @PI = PI();
+
+    -- RADIANS conversion
+    DECLARE @lat1Radians float;
+    DECLARE @long1Radians float;
+    DECLARE @lat2Radians float;
+    DECLARE @long2Radians float;
+
+    SET @lat1Radians = @Latitude1 * @PI / 180;
+    SET @long1Radians = @Longitude1 * @PI / 180;
+    SET @lat2Radians = @Latitude2 * @PI / 180;
+    SET @long2Radians = @Longitude2 * @PI / 180;
+
+    set @retVal = Acos
+        (
+        Cos(@lat1Radians) * Cos(@long1Radians) * Cos(@lat2Radians) * Cos(@long2Radians) + 
+        Cos(@lat1Radians) * Sin(@long1Radians) * Cos(@lat2Radians) * Sin(@long2Radians) + 
+        Sin(@lat1Radians) * Sin(@lat2Radians)
+        ) * @EarthRadiusInMiles;
+
+    end
+
+    return @retVal
+END
+
