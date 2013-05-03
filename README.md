@@ -1,7 +1,7 @@
 JobFinderApp
 ============
 
-This is a Job Finder Application which can search jobs on (APS.NET website) based on the user and job location(using GPS).
+This is a Job Finder Android Application which can search jobs on (APS.NET website) based on the user and job location(using GPS).
 
 The user can define the distance to search.
 
