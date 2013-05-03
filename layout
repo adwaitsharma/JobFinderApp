@@ -1,0 +1,57 @@
+//define the controls
+    Button btn1;
+    Button btn2;
+    Button btn3;
+    TextView Label4;    
+    
+   public void onCreate(Bundle icicle)
+   {
+      //set the contentview to the homescreen  
+      super.onCreate(icicle);
+      setContentView(R.layout.homescreen);
+      
+      //get the buttons objects.
+      btn1 = (Button) findViewById(R.id.btn1);
+      btn2 = (Button) findViewById(R.id.btn2);
+      btn3 = (Button) findViewById(R.id.btn3);
+      
+      Label4 = (TextView) findViewById(R.id.Lable4);
+      
+      //create onclick event handler
+      btn1.setOnClickListener(new OnClickListener() 
+      {            
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                
+                //this will open new screen
+                Intent i = new Intent(homescreen.this, jobsearch.class);
+            
+                startActivity(i);
+            }
+        }); 
+      
+      //=======================================================
+      btn2.setOnClickListener(new OnClickListener() 
+      {        
+        @Override
+        public void onClick(View v) {
+            // TODO Auto-generated method stub
+            
+            //the browse functionality is not implemented yet
+            NotImplemented();            
+        }
+    });
+      
+      //=======================================================
+      btn3.setOnClickListener(new OnClickListener() 
+      {        
+        @Override
+        public void onClick(View v) {
+            // TODO Auto-generated method stub
+            
+              //this will close the application  
+              finish();            
+        }
+    });
+
