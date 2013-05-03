@@ -1,0 +1,27 @@
+/* Creates the menu items */
+   public boolean onCreateOptionsMenu(Menu menu) {
+       menu.add(0,1,0, "Job Search");
+       menu.add(0,2,1, "Browse Jobs");
+       menu.add(0,3,1, "Exit");
+   
+       return true;
+   }
+
+   /* Handles item selections */
+   public boolean onOptionsItemSelected(MenuItem item) {
+       switch (item.getItemId()) {
+       case 1:
+           Intent i = new Intent(homescreen.this, jobsearch.class);
+           startActivity(i);
+           return true;
+       case 2:
+           NotImplemented();
+           return true;
+           
+       case 3:
+          finish();
+           return true;
+       }
+       return false;
+   }
+
