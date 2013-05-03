@@ -1,0 +1,46 @@
+import android.os.Bundle;
+
+import com.google.android.maps.GeoPoint;
+import com.google.android.maps.MapActivity;
+import com.google.android.maps.MapController;
+import com.google.android.maps.MapView;
+
+public class map extends MapActivity 
+{    
+     private MapView myMap;    
+      
+      private double lat; 
+      private double lon;
+  
+    @Override
+     public void onCreate(Bundle icicle)
+       {
+          super.onCreate(icicle);
+          setContentView(R.layout.map);
+          
+          myMap = (MapView) findViewById(R.id.mapview1); //Get map from XML 
+
+          lat = Double.parseDouble(CurrentLocation.Latitude);
+          lon = Double.parseDouble(CurrentLocation.Longitude);
+          navigateToLocation((lat * 1000000), 
+        (lon * 1000000), myMap); //display the found address
+       }
+
+    @Override
+    protected boolean isRouteDisplayed() {
+        // TODO Auto-generated method stub
+        return false;
+    }    
+    
+    public static void navigateToLocation 
+    (double latitude, double longitude, MapView mv) { 
+        GeoPoint p = new GeoPoint((int) latitude, (int) longitude); //new GeoPoint 
+        mv.displayZoomControls(true); //display Zoom 
+        MapController mc = mv.getController(); 
+        mc.animateTo(p); //move map to the given point 
+        int zoomlevel = mv.getMaxZoomLevel(); //detect maximum zoom level 
+        mc.setZoom(zoomlevel - 1); //zoom 
+        mv.setSatellite(false); //display only "normal" mapview  
+      } 
+}
+
