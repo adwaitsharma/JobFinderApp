@@ -1,0 +1,177 @@
+private static final String NAMESPACE="http://tempuri.org/"; 
+private static final String 
+    URL ="http://10.0.2.2/webservice/service.asmx"; //Web Service URL
+private static final 
+   String HelloWorld_SOAP_ACTION ="http://tempuri.org/JobSearch"; //specifies the action 
+private static final String METHOD_NAME1 =
+    "JobSearch";  //specify the method name what you are calling    
+
+//this function is taking long time.. that is why we use handler and thread
+   protected void DoSearch()
+   {
+       try          
+          {           
+           // get the text entered in the search box
+           String keyword = key_txt.getText().toString();
+        
+           //show alert if the user did not enter anything to search
+           if (keyword.equals(""))
+           {
+                   Dialog dlg = new AlertDialog.Builder(this) 
+                    .setIcon(R.drawable.icon) 
+                    .setTitle("Jobs In My Area") 
+                    .setPositiveButton("OK", null) 
+                    .setMessage("Please, Enter Keyword to search") 
+                    .create(); 
+            dlg.show(); 
+           }
+           else               
+           {       
+              lbl_ws.setText(""); 
+               
+              TableLayout tbl1 = (TableLayout) findViewById(R.id.tbl1);
+         
+             tbl1.removeAllViews();
+              
+              //start calling the web service.
+             //create soap request
+             SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME1);
+             
+             //send the parameters
+            request.addProperty("methodName","JobSearch"); 
+            request.addProperty("keyword", keyword);
+            request.addProperty("miles",miles_txt.getText().toString());
+            request.addProperty("latitude", lat);
+            request.addProperty("longitude", lng);
+            
+            //create soap client
+            SoapSerializationEnvelope envelope =new  SoapSerializationEnvelope
+                        (SoapEnvelope.VER11); 
+            envelope.dotNet = true; 
+            
+            envelope.setOutputSoapObject(request); 
+            HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);  
+              
+             //call the web method from the URL 
+            androidHttpTransport.call(HelloWorld_SOAP_ACTION, envelope); 
+            
+            //get the response as raw;
+            SoapObject  objs = (SoapObject)envelope.getResponse();
+            
+            //check the there is a results or not
+            if (objs.getPropertyCount()==0)
+            {
+                   Dialog dlg = new AlertDialog.Builder(this) 
+                  .setIcon(R.drawable.icon) 
+                  .setTitle("Jobs In My Area") 
+                  .setPositiveButton("OK", null) 
+                  .setMessage("No Jobs Found for the search keyword specified!") 
+                  .create(); 
+          dlg.show(); 
+          return;
+            }
+            
+              //loop through the results set
+              for(int i=0;i< objs.getPropertyCount();i++)
+              {
+                  //JobList +=objs.getPropertyCount();
+                  SoapObject obj = (SoapObject) objs.getProperty(i);
+                  
+                  //making the job title bold. using the "SpannableString"
+                  SpannableString jobTitle = new SpannableString
+                (obj.getProperty("JobTitle").toString()); 
+                  jobTitle.setSpan(new StyleSpan(Typeface.BOLD),0,0,0); 
+                  
+                  
+                 // Date d = (Date) obj.getProperty("JobPostDate");
+                  String date_raw = obj.getProperty("JobPostDate").toString();
+                  String Formatted_Date = date_raw.substring(8,10) + 
+        "-" + date_raw.substring(5,7) + "-" + date_raw.substring(0,4);
+                  
+                  SpannableString jobPostDate = new SpannableString(Formatted_Date);
+                  jobPostDate.setSpan(new StyleSpan(Typeface.ITALIC), 0, 0, 0);                  
+                  
+                  String JobDesc =  obj.getProperty("Country").toString();
+                  JobDesc += "," + obj.getProperty("City").toString();
+                  JobDesc += "(" + obj.getProperty
+            ("DistanceMiles").toString() + " Miles)";
+                  JobDesc += " : " + obj.getProperty("JobDesc").toString();
+                  
+                  if (!JobDesc.equals(""))
+                  {
+                      if (JobDesc.length()>200)
+                          JobDesc =   JobDesc.substring(0, 200) + " ...";
+                  }                     
+                    
+                  TextView lbl = new TextView(this);
+                  TextView lbl2 = new TextView(this);
+                  TextView lbl3 = new TextView(this);
+            
+                  lbl.setText(jobTitle);
+                  lbl2.setText(" (" + jobPostDate + ")");
+                 
+                  lbl3.setText(JobDesc);
+                  lbl3.setTextSize(10);            
+                  
+                  //start build up the table
+                  //creating table row    
+                  TableRow tr = new TableRow(this);
+                  
+                  LinearLayout Cell1 = new LinearLayout(this);
+                  Cell1.addView(lbl);
+                  Cell1.addView(lbl2);                 
+                
+                  //adding the cell to the row.          
+                  tr.addView(Cell1);
+                  
+                  TableRow tr2 = new TableRow(this);
+                  LinearLayout Cell2 = new LinearLayout(this);
+                  Cell2.addView(lbl3, new LinearLayout.LayoutParams
+                (450, LayoutParams.WRAP_CONTENT));
+                  tr2.addView(Cell2);
+                 
+                  TableRow tr3 = new TableRow(this);
+                  LinearLayout Cell3 = new LinearLayout(this);
+                  
+                  View hr = new View(this);
+                  //hr.setBackgroundColor(Color.WHITE);
+                  hr.setMinimumHeight(9);
+                  
+                  Cell3.addView(hr); //adding spacer only
+                  tr3.addView(Cell3);
+                  
+                  //registering click for the row.
+                  
+                  tr.setClickable(true);
+                  tr.setId(Integer.parseInt(obj.getProperty("JobID").toString()));
+                  
+                     // Register handler for UI elements
+                  tr.setOnClickListener(new View.OnClickListener() {
+                      public void onClick(View v) {
+                         // Log.d(TAG, "mAddAccountButton clicked");
+                          int rowid;
+                          rowid = v.getId();
+                          String args = Integer.toString(rowid);
+                        
+                        //function to be called when the row is clicked.  
+                          GetRowID(args);
+                      }
+                  }); 
+                  
+                  //adding the row to the table.
+                  tbl1.addView(tr); //adding job title row
+                  tbl1.addView(tr2); // job desc text
+                  tbl1.addView(tr3); // spacer row
+              }
+           }
+          }
+          catch(Exception e)
+          {
+             lbl_ws.setText(e.toString()) ;
+          }
+          finally
+          {
+             pd.dismiss();
+             SearchTread.stop();
+          }
+   }
